@@ -1,0 +1,786 @@
+/* ═══ 字体：游戏中文版自己的位图字，构建时转成像素矢量字 ═══════════════════ */
+@font-face {
+  font-family: "LanaPixel";
+  src: url(assets/fonts/lanapixel.woff2) format("woff2");
+  font-display: block;
+}
+@font-face {
+  font-family: "TeamMeat";
+  src: url(assets/fonts/teammeat12.woff2) format("woff2");
+  font-display: block;
+}
+@font-face {
+  font-family: "TeamMeatBold";
+  src: url(assets/fonts/teammeat16b.woff2) format("woff2");
+  font-display: block;
+}
+@font-face {
+  font-family: "PfTempesta";
+  src: url(assets/fonts/pftempesta.woff2) format("woff2");
+  font-display: block;
+}
+@font-face {
+  font-family: "Upheaval";
+  src: url(assets/fonts/upheaval.woff2) format("woff2");
+  font-display: block;
+}
+
+:root {
+  color-scheme: dark;
+  --ink: #2a211d;
+  --voice-n: #f4ede4;
+  --voice-i: #b9ddff;
+  --voice-d: #ffd88f;
+  --outline: #000;
+}
+
+/* 滚动吸附：每个分镜正中一个吸附点。
+   用 proximity（就近吸附）而不是 mandatory：mandatory 在滚轮/触控板上是“按方向吸附”，
+   动一点点就会跳到下一格；就近吸附则要滚过两格之间的中线才会翻页，没过线会弹回来 */
+html {
+  background: #000;
+  scroll-snap-type: y proximity;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: var(--voice-n);
+  font: 400 22px/26px "LanaPixel", monospace;
+  -webkit-font-smoothing: none;
+  text-rendering: optimizeSpeed;
+  overflow-x: clip;
+}
+
+/* 一层很淡的胶片颗粒，整页共用 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.06;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.6s steps(3) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-4%, 3%); }
+  66% { transform: translate(3%, -4%); }
+}
+
+img {
+  image-rendering: pixelated;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.state {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.unsupported {
+  display: none;
+}
+@supports not (animation-timeline: view()) {
+  .unsupported {
+    display: block;
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 100;
+    margin: 0;
+    padding: 12px 16px;
+    background: #300;
+    text-align: center;
+  }
+}
+
+/* ═══ 章节：高度 = 分镜数 × 每格滚动长度；舞台黏在视口里 ═══════════════════ */
+.ch {
+  position: relative;
+  height: calc(var(--len) * 100svh);
+  view-timeline: --ch block;
+}
+.ch__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: #000;
+  isolation: isolate;
+}
+.snap {
+  position: absolute;
+  left: 0;
+  top: calc((var(--len) - 1) * 100svh * var(--f));
+  width: 1px;
+  height: 1px;
+  scroll-snap-align: start;
+  pointer-events: none;
+}
+
+/* ═══ 分镜：滚动只把 --on 置 1，其余全部按时间播放 ═══════════════════════════ */
+@property --on {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+.w {
+  --on: 0;
+  position: absolute;
+  inset: 0;
+  container-name: w;
+  pointer-events: none;
+  animation: on linear none;
+  animation-timeline: --ch;
+  animation-range: contain var(--a) contain var(--b);
+}
+@keyframes on {
+  from, to { --on: 1; }
+}
+.w__in {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--fade, 0.5s) ease;
+}
+@container w style(--on: 1) {
+  .w__in {
+    opacity: 1;
+  }
+}
+
+/* 分镜里的定时出现/消失：激活后第 --in 秒出现，第 --out 秒消失。
+   at--end：分镜被翻走（淡出）的时候它仍然在画面上 */
+.at {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.at--end {
+  opacity: 1;
+}
+@container w style(--on: 1) {
+  .at {
+    animation: at-in 1ms var(--in, 0s) both, at-out 1ms var(--out, 9999s) forwards;
+  }
+}
+@keyframes at-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes at-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ═══ 像素屏幕：内部用游戏原始像素坐标，整体按容器宽度等比放大 ═══════════════ */
+.screen {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  aspect-ratio: 16 / 9;
+  container-type: inline-size;
+}
+.screen--fit {
+  width: min(100vw, 177.78svh);
+  overflow: hidden;
+}
+.screen--cover {
+  width: max(100vw, 177.78svh);
+}
+.screen.cut {
+  aspect-ratio: 432 / 240;
+  width: max(100vw, 180svh);
+}
+/* 竖屏手机：纸和房间都放大一些（裁掉桌面和墙的边），让画面主体占满宽度 */
+@media (orientation: portrait) {
+  .screen--cover,
+  .screen.cut {
+    width: 170vw;
+  }
+  .title-screen.screen--cover {
+    width: 100vw;
+  }
+}
+.px480,
+.px432 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+.px480 {
+  width: 480px;
+  height: 270px;
+  scale: tan(atan2(100cqw, 480px));
+}
+.px432 {
+  width: 432px;
+  height: 240px;
+  scale: tan(atan2(100cqw, 432px));
+}
+.px480 img,
+.px432 img {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.overlay {
+  width: 480px;
+  height: 270px;
+  pointer-events: none;
+}
+
+/* ═══ 字幕：一个字一个字打出来（固定速度） ═══════════════════════════════════ */
+.subs {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.subs .w__in {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: max(6svh, 28px);
+}
+.say {
+  margin: 0;
+  padding: 0 20px;
+  text-align: center;
+  text-wrap: balance;
+  /* 游戏里的字幕：一圈黑描边 */
+  text-shadow:
+    2px 0 0 var(--outline), -2px 0 0 var(--outline), 0 2px 0 var(--outline), 0 -2px 0 var(--outline),
+    2px 2px 0 var(--outline), -2px -2px 0 var(--outline), 2px -2px 0 var(--outline), -2px 2px 0 var(--outline);
+}
+.say span {
+  display: inline-block;
+}
+@container w style(--on: 1) {
+  .say span {
+    animation: type 1ms calc(var(--d) + var(--i) * var(--cps)) both;
+  }
+}
+@keyframes type {
+  from { opacity: 0; translate: 0 0.2em; }
+  to { opacity: 1; translate: 0 0; }
+}
+.say--n {
+  font: 400 24px/38px "TeamMeat", "LanaPixel", monospace;
+  color: var(--voice-n);
+}
+.say--i {
+  font: 400 22px/28px "LanaPixel", monospace;
+  color: var(--voice-i);
+  letter-spacing: 1px;
+}
+.say--d {
+  font: 400 32px/44px "TeamMeatBold", "TeamMeat", monospace;
+  color: var(--voice-d);
+}
+/* 梦里的字放在气泡和以撒之间的光里 */
+.subs .dream-lines .w__in {
+  justify-content: flex-start;
+  padding-top: calc(50svh + min(100vw, 177.78svh) * 9 / 16 * 0.08);
+}
+@media (orientation: portrait) {
+  .subs .dream-lines .w__in {
+    padding-top: calc(50svh + 100vw * 9 / 16 * 0.55);
+  }
+}
+/* 大屏幕上放大到 3 倍（像素字只用整数倍才清晰） */
+@media (min-width: 1200px) and (min-height: 700px) {
+  .say--n {
+    font-size: 36px;
+    line-height: 54px;
+  }
+  .say--i {
+    font-size: 33px;
+    line-height: 42px;
+  }
+  .say--d {
+    font-size: 48px;
+    line-height: 64px;
+  }
+  .say {
+    text-shadow:
+      3px 0 0 var(--outline), -3px 0 0 var(--outline), 0 3px 0 var(--outline), 0 -3px 0 var(--outline),
+      3px 3px 0 var(--outline), -3px -3px 0 var(--outline), 3px -3px 0 var(--outline), -3px 3px 0 var(--outline);
+  }
+}
+
+/* ═══ 章节卡 ════════════════════════════════════════════════════════════════ */
+.card-w {
+  z-index: 30;
+}
+.card {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 18px;
+  background: #000;
+  color: var(--voice-n);
+}
+.card__no {
+  font: 400 40px/1 "Upheaval", monospace;
+  color: #8b1e17;
+  letter-spacing: 8px;
+}
+.card__title {
+  font: 400 48px/1.2 "TeamMeatBold", monospace;
+  animation: boil 0.36s steps(1) infinite;
+}
+@keyframes boil {
+  0% { filter: url(#boil-0); }
+  33% { filter: url(#boil-1); }
+  66% { filter: url(#boil-2); }
+}
+
+/* ═══ 序：标题画面 ══════════════════════════════════════════════════════════ */
+/* 翻走的时候镜头钻进纸上的画里（过渡动画，时间驱动） */
+.title-screen {
+  transform-origin: 50% 58%;
+  transform: scale(2.6);
+  filter: brightness(0);
+  transition: transform 1.3s cubic-bezier(0.55, 0, 0.8, 0.4), filter 1.3s ease-in;
+}
+@container w style(--on: 1) {
+  .title-screen {
+    transform: none;
+    filter: none;
+  }
+}
+.title-fly {
+  position: absolute;
+  left: 0;
+  top: 0;
+  offset-rotate: 0deg;
+  animation: fly-path 11s linear infinite;
+}
+.title-fly--0 {
+  offset-path: path("M 60 60 C 140 10 220 120 300 70 S 440 20 420 130 S 250 240 150 200 S -10 110 60 60");
+}
+.title-fly--1 {
+  offset-path: path("M 400 210 C 330 250 260 180 320 130 S 470 80 430 40 S 280 20 250 90 S 460 180 400 210");
+  animation-duration: 8s;
+}
+.title-fly--2 {
+  offset-path: path("M 90 230 C 40 180 120 150 170 190 S 230 250 120 250 S 140 200 90 230");
+  animation-duration: 6s;
+  animation-direction: reverse;
+}
+@keyframes fly-path {
+  to { offset-distance: 100%; }
+}
+.whisper .w__in {
+  display: grid;
+  place-content: center;
+}
+.whisper .say {
+  font-size: 33px;
+  line-height: 42px;
+  color: #dfe9f2;
+}
+.scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  width: 4px;
+  height: 4px;
+  translate: -50% 0;
+  scale: 4;
+  background: #fff;
+  box-shadow: -4px -4px 0 #fff, 4px -4px 0 #fff, -8px -8px 0 #fff, 8px -8px 0 #fff;
+  animation: hint 1.4s steps(2) infinite;
+}
+@keyframes hint {
+  50% { translate: -50% 3px; }
+}
+
+/* ═══ 纸上的画（过场动画） ═══════════════════════════════════════════════════ */
+/* 镜头轻轻呼吸（时间驱动，不跟滚动） */
+.cut .cam {
+  animation: breathe 14s ease-in-out infinite alternate;
+}
+@keyframes breathe {
+  from { transform: translate(216px, 120px) scale(1.02) translate(-216px, -120px); }
+  to { transform: translate(216px, 120px) scale(1.07) translate(-218px, -123px); }
+}
+.cut__bg,
+.cut__top,
+.cut__blank {
+  width: 432px;
+  height: 240px;
+}
+.cut__top {
+  pointer-events: none;
+}
+/* 一个镜头：两帧来回切（线条抖动），进场时像铅笔从左往右画出来 */
+.shot {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  image-rendering: pixelated;
+  mask-image: linear-gradient(100deg, #000 42%, transparent 58%);
+  mask-size: 260% 100%;
+  mask-repeat: no-repeat;
+  mask-position: 0 0;
+  animation: boil2 0.2s steps(1) infinite;
+}
+@container w style(--on: 1) {
+  .shot {
+    animation: boil2 0.2s steps(1) infinite, draw 1.2s 0.15s cubic-bezier(0.4, 0, 0.6, 1) both;
+  }
+}
+@keyframes boil2 {
+  0% { background-position: 0 0; }
+  50% { background-position: 100% 0; }
+}
+@keyframes draw {
+  from { mask-position: 100% 0; }
+  to { mask-position: 0 0; }
+}
+/* 画面底部压暗一点，好读字幕 */
+.ch--cut .ch__stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  z-index: 10;
+  background: linear-gradient(transparent, rgb(0 0 0 / 0.72));
+  pointer-events: none;
+}
+
+/* 往上：光（跟着整章的滚动慢慢变亮） */
+.rays {
+  position: absolute;
+  inset: -40%;
+  z-index: 5;
+  pointer-events: none;
+  background: repeating-conic-gradient(from 0deg at 50% 55%, rgb(255 250 230 / 0.12) 0 4deg, transparent 4deg 11deg);
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(closest-side at 50% 55%, #000, transparent);
+  animation: rays-spin 60s linear infinite, rays-grow linear both;
+  animation-timeline: auto, --ch;
+  animation-range: normal, contain 0% contain 100%;
+}
+@keyframes rays-spin {
+  to { rotate: 360deg; }
+}
+@keyframes rays-grow {
+  0% { opacity: 0; }
+  20% { opacity: 0.5; }
+  90% { opacity: 1; background-color: rgb(255 255 255 / 0.2); }
+  100% { opacity: 1; background-color: rgb(255 255 255 / 0.9); }
+}
+
+/* ═══ 游戏画面：房间、HUD、横幅 ═════════════════════════════════════════════ */
+.room {
+  width: 468px;
+  height: 312px;
+}
+.room-fly {
+  position: absolute;
+  left: 0;
+  top: 0;
+  offset-rotate: 0deg;
+  animation: fly-path 7s linear infinite;
+}
+.room-fly--0 {
+  offset-path: path("M 110 90 C 160 60 200 120 150 140 S 60 130 110 90");
+}
+.room-fly--1 {
+  offset-path: path("M 370 200 C 420 170 400 110 350 130 S 320 230 370 200");
+  animation-duration: 5.5s;
+}
+.hud {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+}
+.hud > img {
+  position: absolute;
+}
+.hud__num {
+  position: absolute;
+  translate: 0 -50%;
+  font: 400 8px/8px "PfTempesta", monospace;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+.held__item {
+  width: 32px;
+  height: 32px;
+}
+
+/* 拾取横幅上的字：和横幅动画（70 帧 = 2.33 秒）同步弹出、停留、收走 */
+.streak {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+}
+.streak-text {
+  position: absolute;
+  left: 0;
+  width: 480px;
+  translate: 0 -50%;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+}
+@container w style(--on: 1) {
+  .streak-text {
+    animation: streak-text 2.33s var(--in) linear both;
+  }
+}
+.streak-text--name {
+  font: 400 16px/20px "TeamMeatBold", monospace;
+  color: #f2ede6;
+}
+.streak-text--desc {
+  font: 400 12px/14px "TeamMeat", monospace;
+  color: #3a2c24;
+}
+@keyframes streak-text {
+  0% { transform: scale(0.1, 1); opacity: 0; }
+  10% { transform: scale(1.08, 1); opacity: 1; }
+  14% { transform: scale(1, 1); }
+  84% { transform: scale(1, 1); opacity: 1; }
+  100% { transform: scale(1.2, 0); opacity: 0; }
+}
+
+/* 跳进活板门之后，黑幕从四周圈过来 */
+@property --iris {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 150%;
+}
+.iris {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 65%, transparent var(--iris), #000 calc(var(--iris) + 0.5%));
+}
+@container w style(--on: 1) {
+  .iris {
+    animation: iris 0.9s var(--in) cubic-bezier(0.5, 0, 0.8, 0.6) both;
+  }
+}
+@keyframes iris {
+  from { --iris: 150%; }
+  to { --iris: 0%; }
+}
+
+/* 妈妈的脚落地的那一刻，整块画面震一下 */
+.shake {
+  position: absolute;
+  inset: 0;
+}
+@container w style(--on: 1) {
+  .shake {
+    animation: shake 0.45s var(--hit) linear both;
+  }
+}
+@keyframes shake {
+  0% { transform: translate(0, 7px); }
+  20% { transform: translate(-5px, -4px); }
+  45% { transform: translate(4px, 3px); }
+  70% { transform: translate(-2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ═══ 很多个我：游戏的角色选择页（“我是谁？”） ═════════════════════════════════ */
+@property --rot {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+/* 头像转盘：3D 圆环 + 每个头像反向转回来，永远正对镜头。
+   转动跟着滚动走——发生在翻页的那一小段滚动动画里，停下来时正好停在一个角色上 */
+.ring {
+  position: absolute;
+  left: 240px;
+  top: 96px;
+  perspective: 520px;
+}
+.ring__in {
+  position: absolute;
+  transform-style: preserve-3d;
+  transform: rotateX(-15deg) rotateY(var(--rot));
+  animation-duration: auto;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-timeline: --ch;
+  animation-range: contain 0% contain 100%;
+}
+.pp {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform:
+    rotateY(calc(var(--k) * 360deg / var(--n))) translateZ(96px)
+    rotateY(calc(var(--k) * -360deg / var(--n) - var(--rot))) rotateX(15deg);
+}
+.paper-line {
+  position: absolute;
+  left: 130px;
+  width: 220px;
+  top: 186px;
+}
+.say--ink {
+  padding: 0;
+  font: 400 12px/16px "TeamMeat", monospace;
+  color: var(--ink);
+  text-shadow: none;
+}
+/* 衣柜里的另一个我 */
+.closet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 50%, rgb(90 0 0 / 0.45), #000 45%);
+}
+.closet .px {
+  position: static;
+  width: calc(var(--w) * 6px);
+  height: calc(var(--h) * 6px);
+  filter: drop-shadow(0 0 30px rgb(200 20 20 / 0.6));
+  animation: closet 2.6s ease-in-out infinite;
+}
+@keyframes closet {
+  50% { translate: 0 -6px; filter: drop-shadow(0 0 60px rgb(200 20 20 / 0.8)); }
+}
+
+/* ═══ 结局 ═══════════════════════════════════════════════════════════════════ */
+.ch--end .shot--house {
+  visibility: hidden;
+  mask-image: none;
+  animation: none;
+}
+.dad {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+}
+.dad .w__in {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: max(9svh, 32px);
+}
+.answer-w {
+  pointer-events: auto;
+}
+.answer-w .w__in {
+  padding-bottom: max(9svh, 32px);
+}
+.answer {
+  position: relative;
+  padding: 6px 22px 8px 56px;
+  font: 400 48px/60px "TeamMeatBold", monospace;
+  color: #fff;
+  white-space: nowrap;
+  text-shadow: 3px 3px 0 #000;
+  cursor: pointer;
+}
+.answer::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  translate: 0 -50%;
+  background: #fff;
+  box-shadow: 4px 4px 0 #fff, 8px 8px 0 #fff, 4px 12px 0 #fff, 0 16px 0 #fff, 0 4px 0 #fff, 0 8px 0 #fff, 0 12px 0 #fff;
+  animation: hint 0.9s steps(2) infinite;
+}
+.answer:hover {
+  color: var(--voice-d);
+}
+.after {
+  display: none;
+}
+body:has(#rewrite:checked) .dad > .w {
+  display: none;
+}
+/* 回答之后：按时间把新的故事讲出来 */
+body:has(#rewrite:checked) .after {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(9svh, 32px);
+}
+.after .say span {
+  animation: type 1ms calc(var(--t) * 2.4s + var(--i) * 0.07s + 0.4s) both;
+}
+@media (min-width: 1200px) and (min-height: 700px) {
+  .after .say--d {
+    font-size: 32px;
+    line-height: 44px;
+  }
+}
+.after .say--story {
+  margin-top: 10px;
+}
+body:has(#rewrite:checked) .ch--end .shot--house {
+  visibility: visible;
+  mask-image: linear-gradient(100deg, #000 42%, transparent 58%);
+  animation: boil2 0.2s steps(1) infinite, draw 3s 7.2s both;
+}
+/* 故事讲完，灯关了 */
+.goodnight {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  background: #000;
+  font: 400 33px/42px "LanaPixel", monospace;
+  color: #c9d4de;
+  opacity: 0;
+  pointer-events: none;
+}
+body:has(#rewrite:checked) .goodnight {
+  animation: lights-out 4s 14.5s both;
+}
+@keyframes lights-out {
+  0% { opacity: 0; color: transparent; }
+  45% { opacity: 1; color: transparent; }
+  100% { opacity: 1; color: #c9d4de; }
+}
+
+/* 减少动态效果：去掉纯装饰的循环动画（剧情动画保留） */
+@media (prefers-reduced-motion: reduce) {
+  body::after,
+  .cut .cam,
+  .rays,
+  .card__title {
+    animation: none;
+  }
+}

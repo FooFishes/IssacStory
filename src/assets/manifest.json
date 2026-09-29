@@ -1,0 +1,454 @@
+{
+  "anm2": {
+    "title": {
+      "anm2": "anm2/title.anm2",
+      "sheets": {
+        "0": "gfx/ui/main-menu/titlemenu.png",
+        "1": "gfx/ui/main-menu/logo.png"
+      }
+    },
+    "menufly": {
+      "anm2": "anm2/menufly.anm2",
+      "sheets": {
+        "0": "gfx/ui/main-menu/fly.png"
+      }
+    },
+    "player": {
+      "anm2": "anm2/player.anm2",
+      "sheets": {
+        "0": "gfx/characters/costumes/character_001_isaac.png",
+        "1": "gfx/characters/costumes/ghost.png"
+      }
+    },
+    "streak": {
+      "anm2": "anm2/streak.anm2",
+      "sheets": {
+        "0": "gfx/ui/effect_024_streak.png",
+        "1": "gfx/ui/effect_cursepaper.png"
+      }
+    },
+    "collectible": {
+      "anm2": "anm2/collectible.anm2",
+      "sheets": {
+        "0": "gfx/items/levelitem_001_itemaltar.png",
+        "1": "gfx/items/collectibles/collectibles_001_thesadonion.png",
+        "2": "gfx/effects/effect_023_starflash.png",
+        "3": "gfx/shadow.png"
+      }
+    },
+    "trapdoor": {
+      "anm2": "anm2/trapdoor.anm2",
+      "sheets": {
+        "0": "gfx/grid/door_11_trapdoor.png"
+      }
+    },
+    "door": {
+      "anm2": "anm2/door.anm2",
+      "sheets": {
+        "0": "gfx/grid/door_01_normaldoor.png"
+      }
+    },
+    "fly": {
+      "anm2": "anm2/fly.anm2",
+      "sheets": {
+        "0": "gfx/monsters/classic/monster_010_fly.png"
+      }
+    },
+    "nightbg": {
+      "anm2": "anm2/nightbg.anm2",
+      "sheets": {
+        "0": "gfx/ui/stage/bgblack.png",
+        "1": "gfx/ui/stage/nightmares_bg_mask.png",
+        "2": "gfx/ui/stage/playerportrait_isaac.png",
+        "3": "gfx/ui/boss/bossspot_01_basement.png",
+        "4": "gfx/ui/stage/spotlight.png",
+        "5": "gfx/ui/stage/gradient.png",
+        "6": "gfx/ui/stage/nightmares_bg_static.png"
+      }
+    },
+    "nm1": {
+      "anm2": "anm2/nm1.anm2",
+      "sheets": {
+        "0": "gfx/ui/stage/nightmare_bubbles.png",
+        "1": "gfx/ui/stage/nightmare_1.png"
+      }
+    },
+    "nm2": {
+      "anm2": "anm2/nm2.anm2",
+      "sheets": {
+        "0": "gfx/ui/stage/nightmare_bubbles.png",
+        "1": "gfx/ui/stage/nightmare_2.png"
+      }
+    },
+    "nm4": {
+      "anm2": "anm2/nm4.anm2",
+      "sheets": {
+        "0": "gfx/ui/stage/nightmare_bubbles.png",
+        "1": "gfx/ui/stage/nightmare_4.png"
+      }
+    },
+    "nm9": {
+      "anm2": "anm2/nm9.anm2",
+      "sheets": {
+        "0": "gfx/ui/stage/nightmare_bubbles.png",
+        "1": "gfx/ui/stage/nightmare_9.png"
+      }
+    },
+    "progress": {
+      "anm2": "anm2/progress.anm2",
+      "sheets": {
+        "0": "gfx/ui/stage/progress.png"
+      }
+    },
+    "vs": {
+      "anm2": "anm2/vs.anm2",
+      "sheets": {
+        "0": "gfx/ui/boss/ground.png",
+        "1": "gfx/ui/boss/frame.png",
+        "2": "gfx/ui/boss/bossspot_05_depths.png",
+        "3": "gfx/ui/boss/playerspot_05_depths.png",
+        "4": "gfx/ui/boss/portrait_20.0_monstro.png",
+        "5": "gfx/ui/stage/playerportrait_isaac.png",
+        "6": "gfx/ui/boss/vs.png",
+        "7": "gfx/ui/boss/playername_01_isaac.png",
+        "8": "gfx/ui/boss/bossname_97.0_maskofinfamy.png",
+        "9": "gfx/ui/boss/doubletrouble.png",
+        "10": "gfx/ui/boss/overlay.png"
+      }
+    },
+    "momstomp": {
+      "anm2": "anm2/momstomp.anm2",
+      "sheets": {
+        "0": "gfx/bosses/classic/boss_054_mom.png",
+        "1": "gfx/shadow.png"
+      }
+    },
+    "charmenu": {
+      "anm2": "anm2/charmenu.anm2",
+      "sheets": {
+        "0": "gfx/ui/main-menu/charactermenu.png"
+      }
+    },
+    "portraits": {
+      "anm2": "anm2/portraits.anm2",
+      "sheets": {
+        "0": "gfx/ui/main-menu/charactermenu.png"
+      }
+    },
+    "hearts": {
+      "anm2": "anm2/hearts.anm2",
+      "sheets": {
+        "0": "gfx/ui/ui_hearts.png"
+      }
+    },
+    "hudpickups": {
+      "anm2": "anm2/hudpickups.anm2",
+      "sheets": {
+        "0": "gfx/ui/hudpickups.png"
+      }
+    },
+    "minimap": {
+      "anm2": "anm2/minimap.anm2",
+      "sheets": {
+        "0": "gfx/ui/minimap1.png"
+      }
+    },
+    "charbg": {
+      "anm2": "anm2/charbg.anm2",
+      "sheets": {
+        "0": "gfx/ui/main-menu/charactermenubg.png",
+        "1": "gfx/ui/main-menu/charactermenu.png"
+      }
+    }
+  },
+  "cutscenes": {
+    "intro": {
+      "dir": "cut/intro",
+      "width": 432,
+      "height": 240,
+      "shots": 13
+    },
+    "final": {
+      "dir": "cut/final",
+      "width": 432,
+      "height": 240,
+      "shots": 13
+    }
+  },
+  "rooms": {
+    "basement": "rooms/basement.png",
+    "caves": "rooms/caves.png",
+    "depths": "rooms/depths.png"
+  },
+  "files": {
+    "menuoverlay": "gfx/ui/main-menu/menuoverlay.png",
+    "heartsHud": "gfx/ui/ui_hearts.png",
+    "itemSadOnion": "gfx/items/collectibles/collectibles_001_thesadonion.png",
+    "itemDeadCat": "gfx/items/collectibles/collectibles_081_deadcat.png",
+    "itemMomsKnife": "gfx/items/collectibles/collectibles_114_momsknife.png",
+    "itemPolaroid": "gfx/items/collectibles/collectibles_327_thepolaroid.png",
+    "itemD6": "gfx/items/collectibles/collectibles_105_dice.png",
+    "portraitIsaacBig": "gfx/ui/stage/playerportraitbig_01_isaac.png",
+    "portraitTaintedIsaac": "gfx/ui/stage/playerportrait_isaac_b.png",
+    "vsIsaacName": "gfx/ui/boss/playername_01_isaac.png",
+    "vsMomName": "gfx/ui/boss/bossname_45.0_mom.png",
+    "vsMomPortrait": "gfx/ui/boss/portrait_45.0_mom.png",
+    "vsIsaacPortrait": "gfx/ui/boss/playerportrait_01_isaac.png"
+  },
+  "strings": {
+    "THE_SAD_ONION_NAME": "悲伤洋葱",
+    "DEAD_CAT_NAME": "嗝屁猫",
+    "MOMS_KNIFE_NAME": "妈妈的菜刀",
+    "THE_POLAROID_NAME": "全家福",
+    "THE_SAD_ONION_DESCRIPTION": "射速上升",
+    "DEAD_CAT_DESCRIPTION": "9条命",
+    "MOMS_KNIFE_DESCRIPTION": "戳戳戳",
+    "THE_POLAROID_DESCRIPTION": "宿命已定",
+    "BASEMENT_NAME": "地下室",
+    "CAVES_NAME": "洞穴",
+    "DEPTHS_NAME": "深牢",
+    "ISAAC_NAME": "以撒",
+    "MAGDALENE_NAME": "抹大拉",
+    "CAIN_NAME": "该隐",
+    "JUDAS_NAME": "犹大",
+    "BLUEBABY_NAME": "???",
+    "EVE_NAME": "夏娃",
+    "SAMSON_NAME": "参孙",
+    "AZAZEL_NAME": "阿撒泻勒",
+    "LAZARUS_NAME": "拉撒路",
+    "EDEN_NAME": "伊甸",
+    "THE_LOST_NAME": "游魂",
+    "LILITH_NAME": "莉莉丝",
+    "KEEPER_NAME": "店主",
+    "APOLLYON_NAME": "亚玻伦",
+    "THE_FORGOTTEN_NAME": "遗骸",
+    "BETHANY_NAME": "伯大尼",
+    "JACOB_NAME": "雅各"
+  },
+  "sizes": {
+    "gfx/ui/main-menu/menuoverlay.png": [
+      480,
+      270
+    ],
+    "gfx/ui/ui_hearts.png": [
+      112,
+      64
+    ],
+    "gfx/items/collectibles/collectibles_001_thesadonion.png": [
+      32,
+      32
+    ],
+    "gfx/items/collectibles/collectibles_081_deadcat.png": [
+      32,
+      32
+    ],
+    "gfx/items/collectibles/collectibles_114_momsknife.png": [
+      32,
+      32
+    ],
+    "gfx/items/collectibles/collectibles_327_thepolaroid.png": [
+      32,
+      32
+    ],
+    "gfx/items/collectibles/collectibles_105_dice.png": [
+      32,
+      32
+    ],
+    "gfx/ui/stage/playerportraitbig_01_isaac.png": [
+      112,
+      112
+    ],
+    "gfx/ui/stage/playerportrait_isaac_b.png": [
+      144,
+      144
+    ],
+    "gfx/ui/boss/playername_01_isaac.png": [
+      256,
+      64
+    ],
+    "gfx/ui/boss/bossname_45.0_mom.png": [
+      256,
+      64
+    ],
+    "gfx/ui/boss/portrait_45.0_mom.png": [
+      192,
+      192
+    ],
+    "gfx/ui/boss/playerportrait_01_isaac.png": [
+      112,
+      78
+    ],
+    "rooms/basement.png": [
+      468,
+      312
+    ],
+    "rooms/caves.png": [
+      468,
+      312
+    ],
+    "rooms/depths.png": [
+      468,
+      312
+    ],
+    "gfx/ui/main-menu/titlemenu.png": [
+      480,
+      540
+    ],
+    "gfx/ui/main-menu/logo.png": [
+      480,
+      320
+    ],
+    "gfx/ui/main-menu/fly.png": [
+      192,
+      160
+    ],
+    "gfx/characters/costumes/character_001_isaac.png": [
+      512,
+      512
+    ],
+    "gfx/characters/costumes/ghost.png": [
+      192,
+      64
+    ],
+    "gfx/ui/effect_024_streak.png": [
+      400,
+      64
+    ],
+    "gfx/ui/effect_cursepaper.png": [
+      168,
+      35
+    ],
+    "gfx/items/levelitem_001_itemaltar.png": [
+      256,
+      256
+    ],
+    "gfx/effects/effect_023_starflash.png": [
+      128,
+      96
+    ],
+    "gfx/shadow.png": [
+      120,
+      49
+    ],
+    "gfx/grid/door_11_trapdoor.png": [
+      256,
+      256
+    ],
+    "gfx/grid/door_01_normaldoor.png": [
+      192,
+      240
+    ],
+    "gfx/monsters/classic/monster_010_fly.png": [
+      256,
+      256
+    ],
+    "gfx/ui/stage/bgblack.png": [
+      120,
+      68
+    ],
+    "gfx/ui/stage/nightmares_bg_mask.png": [
+      480,
+      270
+    ],
+    "gfx/ui/stage/playerportrait_isaac.png": [
+      144,
+      144
+    ],
+    "gfx/ui/boss/bossspot_01_basement.png": [
+      260,
+      74
+    ],
+    "gfx/ui/stage/spotlight.png": [
+      256,
+      480
+    ],
+    "gfx/ui/stage/gradient.png": [
+      4,
+      256
+    ],
+    "gfx/ui/stage/nightmares_bg_static.png": [
+      480,
+      270
+    ],
+    "gfx/ui/stage/nightmare_bubbles.png": [
+      384,
+      160
+    ],
+    "gfx/ui/stage/nightmare_1.png": [
+      352,
+      256
+    ],
+    "gfx/ui/stage/nightmare_2.png": [
+      128,
+      128
+    ],
+    "gfx/ui/stage/nightmare_4.png": [
+      480,
+      224
+    ],
+    "gfx/ui/stage/nightmare_9.png": [
+      160,
+      160
+    ],
+    "gfx/ui/stage/progress.png": [
+      256,
+      256
+    ],
+    "gfx/ui/boss/ground.png": [
+      784,
+      448
+    ],
+    "gfx/ui/boss/frame.png": [
+      480,
+      270
+    ],
+    "gfx/ui/boss/bossspot_05_depths.png": [
+      260,
+      74
+    ],
+    "gfx/ui/boss/playerspot_05_depths.png": [
+      172,
+      46
+    ],
+    "gfx/ui/boss/portrait_20.0_monstro.png": [
+      192,
+      192
+    ],
+    "gfx/ui/boss/vs.png": [
+      128,
+      64
+    ],
+    "gfx/ui/boss/bossname_97.0_maskofinfamy.png": [
+      256,
+      64
+    ],
+    "gfx/ui/boss/doubletrouble.png": [
+      256,
+      64
+    ],
+    "gfx/ui/boss/overlay.png": [
+      784,
+      448
+    ],
+    "gfx/bosses/classic/boss_054_mom.png": [
+      320,
+      512
+    ],
+    "gfx/ui/main-menu/charactermenu.png": [
+      512,
+      1024
+    ],
+    "gfx/ui/hudpickups.png": [
+      128,
+      128
+    ],
+    "gfx/ui/minimap1.png": [
+      128,
+      256
+    ],
+    "gfx/ui/main-menu/charactermenubg.png": [
+      512,
+      512
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "isaac-bedtime-story",
+  "version": "1.0.0",
+  "description": "以撒的结合同人：用游戏原版素材讲以撒的内心世界。纯 HTML + CSS，产物里没有一行 JavaScript",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --watch",
+    "fetch-assets": "node scripts/fetch-assets.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FooFishes/front-showcase.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/FooFishes/front-showcase/issues"
+  },
+  "homepage": "https://github.com/FooFishes/front-showcase#readme",
+  "devDependencies": {
+    "opentype.js": "^2.0.0",
+    "sharp": "^0.35.5",
+    "subset-font": "^2.9.0"
+  },
+  "private": true
+}
